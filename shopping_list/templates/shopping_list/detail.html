@@ -1,0 +1,7 @@
+<p>You are currently looking at the {{list0}} list.</p>
+<h1>{{ list0 }}</h1>
+<ul>
+{% for item in list0.items.all %}
+    <li>{{ item.name }}</li>
+{% endfor %}
+</ul>
