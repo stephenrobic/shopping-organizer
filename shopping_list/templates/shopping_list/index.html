@@ -1,0 +1,9 @@
+{% if latest_lists %}
+    <ul>
+    {% for list0 in latest_lists %}
+        <li><a href="{% url 'shopping_list:detail' list0.id %}">{{list0.name}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No lists are available.</p>
+{% endif %}
