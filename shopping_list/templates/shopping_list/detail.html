@@ -1,7 +1,12 @@
-<p>You are currently looking at the {{list0}} list.</p>
-<h1>{{ list0 }}</h1>
-<ul>
-{% for item in list0.items.all %}
-    <li>{{ item.name }}</li>
-{% endfor %}
-</ul>
+<form action="{% url 'shopping_list:detail' list0.id%}" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h1>{{ list0.name }}</h1></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% for item in list0.items.all %}
+        <input type="checkbox" name="item" id="item{{ forloop.counter }}" value="{{ item.id }}">
+        <label for="item{{ forloop.counter }}">{{ item.name }}</label><br>
+    {% endfor %}
+</fieldset>
+<input type="submit" value="Choose Item">
+</form>
