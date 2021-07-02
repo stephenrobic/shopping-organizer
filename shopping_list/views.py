@@ -9,6 +9,8 @@ def index(request):
     context = {'latest_lists': latest_lists}
     return render(request, 'shopping_list/index.html', context)
 
+def home(request):
+    return render(request, "shopping_list/home.html", {})
 
 def detail(request, list_id):
     # try:
@@ -18,3 +20,5 @@ def detail(request, list_id):
     list0 = get_object_or_404(List, pk=list_id)
     return render(request, 'shopping_list/detail.html', {'list0': list0})
     # return HttpResponse("You're looking at list %s." % list_id)
+
+# def create_list(request):

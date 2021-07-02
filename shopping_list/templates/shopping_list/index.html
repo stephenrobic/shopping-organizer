@@ -1,9 +1,70 @@
-{% if latest_lists %}
-    <ul>
-    {% for list0 in latest_lists %}
-        <li><a href="{% url 'shopping_list:detail' list0.id %}">{{list0.name}}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No lists are available.</p>
-{% endif %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}Shopping Organizer{% endblock %}</title>
+    {#    <link rel="shortcut icon" href="img/favicon.ico">#}
+    <!-- Bootstrap 5.0 CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="application/json" href="{% static 'css/bootstrap.min.css.map' %}">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
+</head>
+
+
+<body>
+<!-- Top Bar -->
+<div class="bg-dark">
+    <div class="container">
+        <div class="row">
+            <nav class="col navbar navbar-expand-lg navbar-dark">
+                <a class="navbar-brand" href="/">
+                    Shopping Organizer
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- End Top Bar -->
+
+
+<div class="container-fluid fill-height">
+    {% block content %}
+    {% endblock %}
+</div>
+
+
+<!-- Start Footer -->
+<footer>
+    <div class="footer fixed-bottom bg-danger">
+        <div class="container">
+            <div class="row text-light text-center">
+                <div class="col">
+                    <ul class="pt-3 list-inline text-center">
+                        <li class="list-inline-item"><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+                <p>&copy;2021/All Rights Reserved By Stephen Robicheaux</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- End Footer -->
+
+
+<!-- Bootstrap 5.0 JS -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script type="application/json" src="{% static 'js/bootstrap.bundle.min.js.map' %}"></script>
+
+</body>
+</html>
