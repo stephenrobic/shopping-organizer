@@ -1,0 +1,21 @@
+{%  extends "shopping_list/index.html" %}
+{%  load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="create-list" class="col align-self-center">
+            <i class="fa fa-briefcase"></i>
+            <p>What are you waiting for? Let's get this shopping list organized!</p>
+            <form class="form-inline ms-5 ps-5">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary mb-2">
+                        Create List
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
