@@ -8,11 +8,11 @@
         <div id="create-list" class="col align-self-center">
             <i class="fa fa-briefcase"></i>
             <p>What are you waiting for? Let's get this shopping list organized!</p>
-            <form class="form-inline ms-5 ps-5">
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary mb-2">
-                        Create List
-                    </button>
+            <form class="row form-inline" action="create_list/" method="post">
+                {% csrf_token %}
+{#                    TODO: make logic so if you type an already existing list name, it prompts whether you want to create a new list or edit that list#}
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit" id="create-button-home">Create List</button>
                 </div>
             </form>
         </div>
