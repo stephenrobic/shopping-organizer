@@ -12,3 +12,7 @@
     /*color: rgb(255, 255, 255); !*white text*!*/
     font-weight: bold
 }
+
+.field_set{
+  border: 6px ridge #dc3545;
+}
