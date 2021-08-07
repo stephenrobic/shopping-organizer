@@ -1,26 +1,23 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404 ,render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
+from .context_processors import available_lists
 from .models import List, Item
 import logging
 
 
 def index(request):
-    latest_lists = List.objects.order_by('-created_on')
-    context = {'latest_lists': latest_lists}
-    logger = logging.getLogger("info")
-    logger.info(str(latest_lists))
-
+    context = available_lists(request)
     return render(request, 'shopping_list/index.html', context)
 
 
 def home(request):
-    latest_lists = List.objects.order_by('-created_on')
-    context = {'latest_lists': latest_lists}
+    context = available_lists(request)
     return render(request, "shopping_list/home.html", context)
 
 
 def create_list(request):
+    context = available_lists(request)
     if request.method == 'POST':
         if request.POST.get("create_list"):
             list_name = request.POST.get("list_name")
@@ -29,7 +26,7 @@ def create_list(request):
             new_list.save()
             print(request.user)
             return HttpResponseRedirect('/list_details/%i' % new_list.id)
-    return render(request, 'shopping_list/create_list.html', {})
+    return render(request, 'shopping_list/create_list.html', context)
 
 
 def list_details(request, list_id):
@@ -49,4 +46,5 @@ def list_details(request, list_id):
             current_list.items.remove(current_item)
             return HttpResponseRedirect('/list_details/%i' % list_id)
     list0 = get_object_or_404(List, pk=list_id)
-    return render(request, 'shopping_list/detail.html', {'list0': list0})
+    context = {'list0': list0} | available_lists(request)
+    return render(request, 'shopping_list/detail.html', context)
