@@ -23,7 +23,7 @@
         </div>
     </form>
 
-    <form action="#" method="post">
+    <form action="#" method="post" class="form-group form-inline">
         {% csrf_token %}
         <fieldset class="field_set form-group p-3">
             <legend><h1>{{ list0.name }} (${{ list0.budget }} budget)</h1></legend>
@@ -32,7 +32,7 @@
                 <input type="checkbox" name="item" id="item{{ forloop.counter }}" value="{{ item.id }}">
                 <label for="item{{ forloop.counter }}">{{ item.name }}</label><br>
             {% endfor %}
-            <input type="submit" value="Choose Item">
+            <button type="submit" name="remove_item" value="remove_item" class="btn btn-danger btn-outline-primary mb-2">Remove Item</button>
         </fieldset>
     </form>
 {% endblock %}
