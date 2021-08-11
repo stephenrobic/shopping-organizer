@@ -45,6 +45,9 @@ def list_details(request, list_id):
             current_item = get_object_or_404(Item, pk=item_id)
             current_list.items.remove(current_item)
             return HttpResponseRedirect('/list_details/%i' % list_id)
+        if request.POST.get("remove_list"):
+            current_list.delete()
+            return HttpResponseRedirect('/')
     list0 = get_object_or_404(List, pk=list_id)
     context = {'list0': list0} | available_lists(request)
     return render(request, 'shopping_list/detail.html', context)

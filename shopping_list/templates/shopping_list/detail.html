@@ -2,7 +2,7 @@
 
 {%  load static %}
 
-{% block title %}List Details{% endblock %}
+{% block title %}{{ list0.name }} List Details{% endblock %}
 
 {% block content %}
 
@@ -34,5 +34,29 @@
             {% endfor %}
             <button type="submit" name="remove_item" value="remove_item" class="btn btn-danger btn-outline-primary mb-2">Remove Item</button>
         </fieldset>
+
+        <!-- Deletion Button Trigger Modal -->
+        <button type="button" name="remove_list" value="remove_list" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeletion">
+            !!!DELETE LIST!!!
+        </button>
+        <!-- Deletion Modal -->
+        <div class="modal fade" id="confirmDeletion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmDeletionLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeletionLabel">Warning! {{ list0.name }} will be deleted FOREVER!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this shopping list?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="remove_list" value="remove_list" class="btn btn-success btn-outline-dark">Yes</button>
+                        <button type="button" class="btn btn-danger btn-outline-dark" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
+
 {% endblock %}
