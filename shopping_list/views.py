@@ -3,7 +3,6 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from .context_processors import available_lists
 from .models import List, Item
-import logging
 
 
 def index(request):
@@ -48,6 +47,15 @@ def list_details(request, list_id):
         if request.POST.get("remove_list"):
             current_list.delete()
             return HttpResponseRedirect('/')
+        if request.POST.get("edit_list"):
+            if request.POST.get("new_list_name"):
+                new_list_name = request.POST.get("new_list_name")
+                current_list.name = new_list_name
+            if request.POST.get("new_list_budget"):
+                new_list_budget = request.POST.get("new_list_budget")
+                current_list.budget = new_list_budget
+            current_list.save()
+            return HttpResponseRedirect('/list_details/%i' % list_id)
     list0 = get_object_or_404(List, pk=list_id)
     context = {'list0': list0} | available_lists(request)
     return render(request, 'shopping_list/detail.html', context)

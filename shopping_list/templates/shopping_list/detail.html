@@ -26,14 +26,49 @@
     <form action="#" method="post" class="form-group form-inline">
         {% csrf_token %}
         <fieldset class="field_set form-group p-3">
-            <legend><h1>{{ list0.name }} (${{ list0.budget }} budget)</h1></legend>
+            <div class="row">
+            <legend class="col-auto">
+                <h1>{{ list0.name }} (${{ list0.budget }} budget)</h1>
+            </legend>
+
+            <!-- Edit List Trigger Modal -->
+            <button type="button" name="edit_list" value="edit_list" class="col-auto btn btn-danger" data-bs-toggle="modal" data-bs-target="#editList">
+                Edit List
+            </button>
+            <!-- Deletion Modal -->
+            <div class="modal fade" id="editList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editListLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editListLabel">Enter new list name and budget for {{ list0.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="mb-3 input-group">
+                            <label for="new_list_name" class="col-form-label">New List Name:</label>
+                            <input type="text" class="form-control" name="new_list_name" id="new_list_name">
+                        </div>
+                        <div class="mb-3 input-group">
+                            <label for="new_list_budget" class="col-form-label">New List Budget:</label>
+                            <textarea class="form-control" name="new_list_budget" id="new_list_budget"></textarea>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" name="edit_list" value="edit_list" class="btn btn-success btn-outline-dark">Yes</button>
+                            <button type="button" class="btn btn-danger btn-outline-dark" data-bs-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             {% for item in list0.items.all %}
                 <input type="checkbox" name="item" id="item{{ forloop.counter }}" value="{{ item.id }}">
-                <label for="item{{ forloop.counter }}">{{ item.name }}</label><br>
+                <label for="item{{ forloop.counter }}">{{ item.name }} (price: ${{ item.price }})</label><br>
             {% endfor %}
             <button type="submit" name="remove_item" value="remove_item" class="btn btn-danger btn-outline-primary mb-2">Remove Item</button>
         </fieldset>
+
 
         <!-- Deletion Button Trigger Modal -->
         <button type="button" name="remove_list" value="remove_list" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeletion">
@@ -41,7 +76,7 @@
         </button>
         <!-- Deletion Modal -->
         <div class="modal fade" id="confirmDeletion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmDeletionLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="confirmDeletionLabel">Warning! {{ list0.name }} will be deleted FOREVER!</h5>
