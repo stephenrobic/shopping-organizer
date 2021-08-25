@@ -40,9 +40,10 @@ def list_details(request, list_id):
             print(request.user)
             return HttpResponseRedirect('/list_details/%i' % list_id)
         if request.POST.get("remove_item"):
-            item_id = request.POST.get("item")
-            current_item = get_object_or_404(Item, pk=item_id)
-            current_list.items.remove(current_item)
+            item_id_list = request.POST.getlist("item")
+            for item_id in item_id_list:
+                current_item = get_object_or_404(Item, pk=item_id)
+                current_list.items.remove(current_item)
             return HttpResponseRedirect('/list_details/%i' % list_id)
         if request.POST.get("remove_list"):
             current_list.delete()
