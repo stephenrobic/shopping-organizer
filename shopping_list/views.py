@@ -57,6 +57,16 @@ def list_details(request, list_id):
                 current_list.budget = new_list_budget
             current_list.save()
             return HttpResponseRedirect('/list_details/%i' % list_id)
+        if request.POST.get("edit_item"):
+            item_id = request.POST.get("edit_item")
+            if request.POST.get("new_item_name"):
+                new_item_name = request.POST.get("new_item_name")
+                current_list.items.filter(pk=item_id).update(name=new_item_name)
+            if request.POST.get("new_item_price"):
+                new_item_price = request.POST.get("new_item_price")
+                current_list.items.filter(pk=item_id).update(price=new_item_price)
+            current_list.save()
+            return HttpResponseRedirect('/list_details/%i' % list_id)
     list0 = get_object_or_404(List, pk=list_id)
     context = {'list0': list0} | available_lists(request)
     return render(request, 'shopping_list/detail.html', context)
