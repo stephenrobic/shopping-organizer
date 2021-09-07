@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os, sys
-from pathlib import Path
 import logging.config
+import os
+import sys
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,9 @@ SECRET_KEY = 'django-insecure-kg0wvan@(!9lun1!aqay2o4^fmm8xvtj8)2y7se7&5xji6q#sj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+#For development only
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -79,12 +82,12 @@ WSGI_APPLICATION = 'shopping_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'shopping_organizer',
-        'USER': 'stephen',
-        'PASSWORD': 'yogurt2020',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': os.environ.get("DATABASE_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("DATABASE_NAME", "postgres"),
+        "USER": os.environ.get("SQL_USER", "postgres"),
+        "HOST": os.environ.get("DATABASE_HOST", "db"),
+        "PORT": os.environ.get("DATABASE_PORT", "5432"),
+
     }
 }
 
