@@ -3,6 +3,8 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from .context_processors import available_lists
 from .models import List, Item
+from .forms import CreateListForm
+from django.contrib import messages
 
 
 def index(request):
@@ -12,20 +14,33 @@ def index(request):
 
 def home(request):
     context = available_lists(request)
-    return render(request, "shopping_list/home.html", context)
+    return render(request, 'shopping_list/home.html', context)
+
+
+# def create_list(request):
+#     context = available_lists(request)
+#     if request.method == 'POST':
+#         if request.POST.get("create_list"):
+#             list_name = request.POST.get("list_name")
+#             list_budget = request.POST.get("budget")
+#             new_list = List(name=list_name, budget=list_budget)
+#             new_list.save()
+#             print(request.user)
+#             return HttpResponseRedirect('/list_details/%i' % new_list.id)
+#     return render(request, 'shopping_list/create_list.html', context)
 
 
 def create_list(request):
     context = available_lists(request)
     if request.method == 'POST':
-        if request.POST.get("create_list"):
-            list_name = request.POST.get("list_name")
-            list_budget = request.POST.get("budget")
-            new_list = List(name=list_name, budget=list_budget)
-            new_list.save()
-            print(request.user)
+        form = CreateListForm(request.POST)
+        if form.is_valid():
+            new_list = form.save()
+            messages.success(request, 'New List successfully created!')
             return HttpResponseRedirect('/list_details/%i' % new_list.id)
-    return render(request, 'shopping_list/create_list.html', context)
+    else:
+        form = CreateListForm()
+    return render(request, 'shopping_list/create_list.html', context | {'form': form})
 
 
 def list_details(request, list_id):
