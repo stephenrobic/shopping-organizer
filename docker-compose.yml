@@ -1,0 +1,32 @@
+  version: "3.9"
+  services:
+    db:
+      image: postgres:13.4-alpine
+      environment:
+        - POSTGRES_HOST_AUTH_METHOD=trust
+        - POSTGRES_USER=postgres
+        - POSTGRES_DB=postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      container_name: db_container
+
+    shopping_list:
+      build: .
+      ports:
+        - "8000:8000"
+      volumes:
+        - .:/home/user/shopping_list
+        - ./database:/db
+      environment:
+        - DATABASE_ENGINE=django.db.backends.postgresql
+        - DATABASE_USER=postgres
+        - DATABASE_NAME=postgres
+        - DATABASE_HOST=db
+        - DATABASE_PORT=5432
+      image: shopping_list:shopping_list
+      container_name: shopping_list_container
+      depends_on:
+        - db
+
+  volumes:
+    postgres_data:
