@@ -10,4 +10,8 @@ urlpatterns = [
     # path('creating_list/', views.creating_list, name='creating_list'),
     # ex: /5
     path('list_details/<int:list_id>/', views.list_details, name='list_details'),
+
+    path('login/', views.login_user, name="login"),
+    path('logout/', views.logout_user, name="logout"),
+    path('register/', views.register_user, name="register")
 ]

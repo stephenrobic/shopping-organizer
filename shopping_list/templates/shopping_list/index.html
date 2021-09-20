@@ -24,7 +24,7 @@
 <div class="bg-dark">
     <div class="container">
         <div class="row">
-            <nav class="col navbar navbar-expand-lg navbar-dark">
+            <nav class="col navbar navbar-expand-md navbar-dark">
                 <a class="navbar-brand" href="/">
                     Shopping Organizer
                 </a>
@@ -43,6 +43,20 @@
                                 {% endfor %}
                             </ul>
                         </li>
+                        {% if request.user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarUserLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Hello {{ request.user }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarUserLink">
+                                    <li><a class="dropdown-item" href={% url 'shopping_list:logout' %}>Logout</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href={% url 'shopping_list:login' %}>Login</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>

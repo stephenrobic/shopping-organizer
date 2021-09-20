@@ -14,5 +14,16 @@
 }
 
 .field_set{
-  border: 6px ridge #dc3545;
+    border: 6px ridge #dc3545;
+}
+
+.login-wrapper{
+    display: flex;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form{
+    width: 600px;
 }
