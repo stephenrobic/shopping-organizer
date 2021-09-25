@@ -1,0 +1,37 @@
+{%  extends "shopping_list/index.html" %}
+{%  load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    {% if page == 'login' %}
+    <div class="container">
+        <div class="login-wrapper">
+            <form class="login-form" method="POST" action="#">
+{#            <form class="login-form pt-5 form-group row" method="POST" action="#">#}
+                {% csrf_token %}
+                <h1>Login</h1>
+                <h4>Login to view your saved lists and share with others!</h4>
+                <div class="mb-3 col-4">
+                    <label for="inputUsername" class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" id="inputUsername" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3 col-4">
+                    <label for="inputPassword" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="inputPassword">
+                </div>
+                <button type="submit" name="submit_login" value="submit_login" class="btn btn-primary">Submit</button>
+                <p>Don't have an account? <a href={% url 'shopping_list:register' %}>Register Now</a></p>
+            </form>
+        </div>
+    </div>
+    {% else %}
+        <form method="POST">
+            {% csrf_token %}
+            <h1>Register</h1>
+            {{ form }}
+            <button type="submit" name="submit_login" value="submit_login" class="btn btn-primary">Submit</button>
+            <p>Already have an account? <a href={% url 'shopping_list:login' %}>Login Now</a></p>
+        </form>
+    {% endif %}
+{% endblock %}

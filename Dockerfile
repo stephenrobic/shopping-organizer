@@ -24,10 +24,6 @@ RUN apk add --update gcc libc-dev linux-headers postgresql-dev musl-dev
 USER user
 RUN pip install -r /requirements.txt
 
-COPY --chown=user:user ./shopping_list /shopping_list
-
 RUN chmod +x /scripts/*
-
-USER user
 
 ENTRYPOINT "entrypoint.sh"

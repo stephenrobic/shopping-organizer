@@ -82,12 +82,17 @@ WSGI_APPLICATION = 'shopping_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("DATABASE_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("DATABASE_NAME", "postgres"),
-        "USER": os.environ.get("SQL_USER", "postgres"),
-        "HOST": os.environ.get("DATABASE_HOST", "db"),
-        "PORT": os.environ.get("DATABASE_PORT", "5432"),
-
+        # 'ENGINE': os.environ.get("DATABASE_ENGINE", "django.db.backends.postgresql"),
+        # "NAME": os.environ.get("DATABASE_NAME", "postgres"),
+        # "USER": os.environ.get("SQL_USER", "postgres"),
+        # "HOST": os.environ.get("DATABASE_HOST", "db"),
+        # "PORT": os.environ.get("DATABASE_PORT", "5432"),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'shopping_organizer',
+        'USER': 'stephen',
+        'PASSWORD': 'yogurt2020',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

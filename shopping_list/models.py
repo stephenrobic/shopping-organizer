@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 # from django.contrib.auth.models import User
 import datetime
@@ -17,6 +18,9 @@ class Item(models.Model):
 
 
 class List(models.Model):
+    user = models.ForeignKey(User, related_name="shoppinglist",
+                             on_delete=models.SET_NULL,
+                             null=True, blank=True)
     name = models.CharField(max_length=200)
     items = models.ManyToManyField(Item)
     created_on = models.DateTimeField('created on', auto_now_add=True)

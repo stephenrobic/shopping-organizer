@@ -5,6 +5,7 @@
 {% block title %}{{ list0.name }} List Details{% endblock %}
 
 {% block content %}
+    {% if request.user.is_authenticated %}
 
     <form action="#" method="post" class="form-group form-inline">
         {% csrf_token %}
@@ -50,7 +51,6 @@
                             <label for="new_list_budget" class="col-form-label">New List Budget:</label>
                             <textarea class="form-control" name="new_list_budget" id="new_list_budget"></textarea>
                         </div>
-
                         <div class="modal-footer">
                             <button type="submit" name="edit_list" value="edit_list" class="btn btn-success btn-outline-dark">Yes</button>
                             <button type="button" class="btn btn-danger btn-outline-dark" data-bs-dismiss="modal">No</button>
@@ -99,11 +99,11 @@
             </div>
         </fieldset>
 
-
         <!-- Deletion Button Trigger Modal -->
         <button type="button" name="remove_list" value="remove_list" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeletion">
             !!!DELETE LIST!!!
         </button>
+
         <!-- Deletion Modal -->
         <div class="modal fade" id="confirmDeletion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmDeletionLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -123,5 +123,7 @@
             </div>
         </div>
     </form>
-
+    {% else %}
+        <p>Login <a href={% url 'shopping_list:login' %}>Here</a></p>
+    {% endif %}
 {% endblock %}
