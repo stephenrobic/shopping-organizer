@@ -1,10 +1,12 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from .context_processors import available_lists
-from .models import List, Item
+from .context_processors import available_lists, incoming_friend_requests, outgoing_friend_requests, current_friends
+from .models import List, Item, Friends, FriendRequest
 from .forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 def login_user(request):
@@ -37,17 +39,56 @@ def register_user(request):
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect('/')
-    context = available_lists(request) | {'form': form} | {'page': page}
+    context = available_lists(request) | {'form': form} | {'page': page} | incoming_friend_requests(request)\
+              | outgoing_friend_requests(request) | current_friends(request)
     return render(request, 'shopping_list/login_register.html', context)
 
 
 def index(request):
-    context = available_lists(request)
+    context = available_lists(request) | incoming_friend_requests(request)\
+              | outgoing_friend_requests(request) | current_friends(request)
     return render(request, 'shopping_list/index.html', context)
 
 
 def home(request):
-    context = available_lists(request)
+    context = available_lists(request) | incoming_friend_requests(request)\
+              | outgoing_friend_requests(request) | current_friends(request)
+    return render(request, 'shopping_list/home.html', context)
+
+
+@login_required(login_url='/login/')
+def add_friend(request, request_id=None, friend_name=None):
+    context = available_lists(request) | incoming_friend_requests(request) \
+              | outgoing_friend_requests(request) | current_friends(request)
+    user = request.user
+    if request.method == 'POST':
+        if request.POST.get("add_friend"):
+            friend_name = request.POST.get("friend_name")
+            try:
+                receiver_id = User.objects.get(username=friend_name)
+            except ObjectDoesNotExist:
+                return HttpResponseRedirect('/')
+            try:
+                FriendRequest.objects.get(receiver=user, sender=receiver_id, is_active=True)
+            except ObjectDoesNotExist:
+                new_friend_request, created = FriendRequest.objects.get_or_create(sender=user, receiver=receiver_id)
+                if not created:
+                    FriendRequest.objects.filter(sender=user, receiver=receiver_id).update(is_active=True)
+                else:
+                    new_friend_request.save()
+        elif request_id:
+            current_request = FriendRequest.objects.get(id=request_id)
+            if request.POST.get("accept_request"):
+                current_request.accept()
+            elif request.POST.get("decline_request"):
+                current_request.decline()
+            elif request.POST.get("cancel_request"):
+                current_request.decline()
+        elif friend_name:
+            remover = Friends.objects.get(user=request.user)
+            removee = User.objects.get(username=friend_name)
+            remover.unfriend(removee)
+        return HttpResponseRedirect('/')
     return render(request, 'shopping_list/home.html', context)
 
 
@@ -62,7 +103,8 @@ def create_list(request):
             new_list.save()
             print(request.user)
             return HttpResponseRedirect('/list_details/%i' % new_list.id)
-    return render(request, 'shopping_list/create_list.html', {})
+    context = incoming_friend_requests(request) | outgoing_friend_requests(request) | current_friends(request)
+    return render(request, 'shopping_list/create_list.html', context)
 
 
 @login_required(login_url='/login/')
@@ -109,7 +151,8 @@ def list_details(request, list_id):
         else:
             return HttpResponse("YOU DON'T HAVE PERMISSION TO EDIT THIS LIST!")
     elif current_list in request.user.shoppinglist.all():
-        context = {'list0': current_list} | available_lists(request)
+        context = {'list0': current_list} | available_lists(request) | incoming_friend_requests(request)\
+                  | outgoing_friend_requests(request) | current_friends(request)
         return render(request, 'shopping_list/detail.html', context)
     else:
         return HttpResponse("YOU DON'T HAVE ACCESS TO THIS PAGE!")

@@ -21,49 +21,181 @@
 
 <body>
 <!-- Top Bar -->
-<div class="bg-dark">
-    <div class="container">
-        <div class="row">
-            <nav class="col navbar navbar-expand-md navbar-dark">
-                <a class="navbar-brand" href="/">
-                    Shopping Organizer
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Current Lists
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                                {% for current_list in available_lists %}
-                                    <li><a class="dropdown-item" href={% url 'shopping_list:list_details' current_list.id %}>{{ current_list.name }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% if request.user.is_authenticated %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarUserLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Hello {{ request.user }}
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarUserLink">
-                                    <li><a class="dropdown-item" href={% url 'shopping_list:logout' %}>Logout</a></li>
-                                </ul>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href={% url 'shopping_list:login' %}>Login</a>
-                            </li>
-                        {% endif %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Shopping Organizer</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Current Lists -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarCurrentListsDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Current Lists
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarCurrentListsDropdown">
+                        {% for current_list in available_lists %}
+                            <li><a class="dropdown-item" href={% url 'shopping_list:list_details' current_list.id %}>
+                                {{ current_list.name }}
+                            </a></li>
+                        {% endfor %}
                     </ul>
-                </div>
-            </nav>
+                </li>
+
+                {% if request.user.is_authenticated %}
+                    <!-- Username Dropdown-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarUserLink" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Hello {{ request.user }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarUserLink">
+                            <li><a class="dropdown-item" href={% url 'shopping_list:logout' %}>Logout</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Friend List Dropdown-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Friends
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                            {% for friend in friends %}
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-friend-name="{{ friend }}" data-bs-target="#removeFriendModal" href=#removeFriendModal>
+                                    {{ friend }}
+                                </a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+
+                    <!-- Remove Friend Modal -->
+                    <form id="removeFriendForm" action="" method="post" class="form-group form-inline">
+                        {% csrf_token %}
+                        <div class="modal fade" id="removeFriendModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="removeFriendModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="outgoingRequestLabel">Remove Friend:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="submit" name="remove_friend" value="remove_friend" class="btn btn-success btn-outline-dark">Remove Friend</button>
+                                        <button type="button" class="btn btn-danger btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <!-- Friend Request List Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Friend Requests
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+
+                            <!-- Add Friend to Request List -->
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addFriend" href=#addFriend>Add Friend</a></li>
+
+                            <!-- Incoming Friend Request List -->
+                            {% for incoming_request in incoming_friend_requests %}
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-request-id="{{ incoming_request.id }}" data-bs-incoming-name="{{ incoming_request }}" data-bs-target="#incomingRequestModal" href=#incomingRequestModal>
+                                    Incoming from {{ incoming_request.sender }}
+                                </a></li>
+                            {% endfor %}
+
+                            <!-- Outgoing Friend Request List -->
+                            {% for outgoing_request in outgoing_friend_requests %}
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-request-id="{{ outgoing_request.id }}" data-bs-outgoing-name="{{ outgoing_request }}" data-bs-target="#outgoingRequestModal" href=#outgoingRequestModal>
+                                    Outgoing to {{ outgoing_request.receiver }}
+                                </a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+                    <!-- Add Friend Modal -->
+                    <form action="{% url 'shopping_list:add_friend' %}" method="post" class="form-group form-inline">
+                        {% csrf_token %}
+                        <div class="modal fade" id="addFriend" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addFriendLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addFriendLabel">Enter your friend's username to send friend request</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="mb-3 input-group">
+                                        <label for="friend_name" class="col-form-label">Friend's Name:</label>
+                                        <input type="text" class="form-control" name="friend_name" id="friend_name">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" name="add_friend" value="add_friend" class="btn btn-success btn-outline-dark">Submit</button>
+                                        <button type="button" class="btn btn-danger btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Incoming Friend Request Modal -->
+                    <form id="incomingRequestForm" action="" method="post" class="form-group form-inline">
+                        {% csrf_token %}
+                        <div class="modal fade" id="incomingRequestModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="incomingRequestModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="incomingRequestLabel">Accept or Deny Request:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" name="accept_request" value="accept_request" class="btn btn-success btn-outline-dark">Accept</button>
+                                        <button type="submit" name="decline_request" value="decline_request" class="btn btn-warning btn-outline-dark">Decline</button>
+                                        <button type="button" class="btn btn-danger btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <!-- Outgoing Friend Request Modal -->
+                    <form id="outgoingRequestForm" action="" method="post" class="form-group form-inline">
+                        {% csrf_token %}
+                        <div class="modal fade" id="outgoingRequestModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="outgoingRequestModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="outgoingRequestLabel">Cancel Request:</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="submit" name="cancel_request" value="cancel_request" class="btn btn-success btn-outline-dark">Cancel Request</button>
+                                        <button type="button" class="btn btn-danger btn-outline-dark" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href={% url 'shopping_list:login' %}>Login</a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
-</div>
-<!-- End Top Bar -->
+</nav>
 
 
 <div class="container-fluid fill-height">
@@ -93,6 +225,36 @@
 <!-- Bootstrap 5.0 JS -->
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script type="application/json" src="{% static 'js/bootstrap.bundle.min.js.map' %}"></script>
+
+<!-- Modal  -->
+<script type="text/javascript">
+    var incomingFriendModal = document.getElementById('incomingRequestModal')
+    incomingFriendModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var friend = button.getAttribute('data-bs-incoming-name')
+        var request_id = button.getAttribute('data-bs-request-id')
+        var modalTitle = incomingFriendModal.querySelector('.modal-title')
+        modalTitle.textContent = 'Accept or Deny Request from:' + friend
+        document.getElementById('incomingRequestForm').action = "{% url 'shopping_list:add_friend' 1234 %}".replace(/1234/, request_id.toString())
+    })
+    var outgoingFriendModal = document.getElementById('outgoingRequestModal')
+    outgoingFriendModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var friend = button.getAttribute('data-bs-outgoing-name')
+        var request_id = button.getAttribute('data-bs-request-id')
+        var modalTitle = outgoingFriendModal.querySelector('.modal-title')
+        modalTitle.textContent = 'Cancel Request to:' + friend
+        document.getElementById('outgoingRequestForm').action = "{% url 'shopping_list:add_friend' request_id=1234 %}".replace(/1234/, request_id.toString())
+    })
+    var removeFriendModal = document.getElementById('removeFriendModal')
+    removeFriendModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var friend_name = button.getAttribute('data-bs-friend-name')
+        var modalTitle = removeFriendModal.querySelector('.modal-title')
+        modalTitle.textContent = "Remove " + friend_name + " from your friend's list"
+        document.getElementById('removeFriendForm').action = "{% url 'shopping_list:add_friend' friend_name=1234 %}".replace(/1234/, friend_name.toString())
+    })
+</script>
 
 </body>
 </html>
