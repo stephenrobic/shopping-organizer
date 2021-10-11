@@ -13,5 +13,9 @@ urlpatterns = [
 
     path('login/', views.login_user, name="login"),
     path('logout/', views.logout_user, name="logout"),
-    path('register/', views.register_user, name="register")
+    path('register/', views.register_user, name="register"),
+
+    path('add_friend/', views.add_friend, name="add_friend"),
+    path('add_friend/<int:request_id>/', views.add_friend, name="add_friend"),
+    path('add_friend/<str:friend_name>/', views.add_friend, name="add_friend")
 ]
