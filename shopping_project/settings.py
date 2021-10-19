@@ -13,6 +13,9 @@ import logging.config
 import os
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +31,7 @@ SECRET_KEY = 'django-insecure-kg0wvan@(!9lun1!aqay2o4^fmm8xvtj8)2y7se7&5xji6q#sj
 DEBUG = True
 
 #For development only
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS")
 # ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
@@ -68,7 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'shopping_list.context_processors.available_lists',
+                'shopping_list.context_processors.user_lists',
             ],
         },
     },
@@ -82,17 +85,12 @@ WSGI_APPLICATION = 'shopping_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': os.environ.get("DATABASE_ENGINE", "django.db.backends.postgresql"),
-        # "NAME": os.environ.get("DATABASE_NAME", "postgres"),
-        # "USER": os.environ.get("SQL_USER", "postgres"),
-        # "HOST": os.environ.get("DATABASE_HOST", "db"),
-        # "PORT": os.environ.get("DATABASE_PORT", "5432"),
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'shopping_organizer',
-        'USER': 'stephen',
-        'PASSWORD': 'yogurt2020',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'ENGINE': os.getenv("DATABASE_ENGINE", "django.db.backends.postgresql_psycopg2"),
+        'NAME': os.getenv("DATABASE_NAME"),
+        'USER': os.getenv("DATABASE_USER"),
+        'PASSWORD': os.getenv("DATABASE_PASSWORD"),
+        'HOST': os.getenv("DATABASE_HOST"),
+        'PORT': os.getenv("DATABASE_PORT"),
     }
 }
 
