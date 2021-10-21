@@ -24,6 +24,7 @@ class List(models.Model):
     created_on = models.DateTimeField('created on', auto_now_add=True)
     updated_on = models.DateTimeField(auto_now_add=True)
     budget = models.IntegerField(default=0)
+    shared_with = models.ManyToManyField(User, blank=True, related_name="sharedfriends")
 
     def was_created_recently(self):
         return self.created_on >= timezone.now()
@@ -34,17 +35,21 @@ class List(models.Model):
     def __str__(self):
         return self.name
 
-    def share_list(self):
-        pass
+    def share_list(self, account):
+        """
+        Add a friend to share list with
+        """
+        if account not in self.shared_with.all():
+            self.shared_with.add(account)
 
 
 class Friends(models.Model):
-    #Casecade delete => if a user is deleted, their corresponding friend list will be deleted
-    #This is one-one because, there only 1 friend list per 1 user
+    # Cascade delete => if a user is deleted, their corresponding friend list will be deleted
+    # This is one-one because, there only 1 friend list per 1 user
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
-    #A list of users; you can think of it as a list of primary keys to the account of who the user is friends with
-    #blank= True, because it is possible that they have no friends
+    # A list of users; you can think of it as a list of primary keys to the account of who the user is friends with
     friends = models.ManyToManyField(User, blank=True, related_name="friends")
+    # blank= True, because it is possible that they have no friends
 
     def __str__(self):
         return self.user.username
@@ -53,7 +58,7 @@ class Friends(models.Model):
         """
         Add a new friend
         """
-        #check if they're already in friends, and if not, add them
+        # check if they're already in friends, and if not, add them
         if account not in self.friends.all():
             self.friends.add(account)
 
@@ -68,7 +73,8 @@ class Friends(models.Model):
         """
         Initiate the action of unfriending someone
         """
-        remover_friends_list = self #person executing the friendship termination
+        # person executing the friendship termination
+        remover_friends_list = self
 
         # Remove friend from remover friend list
         remover_friends_list.remove_friend(removee)
@@ -90,7 +96,7 @@ class FriendRequest(models.Model):
         1. A SENDER who initiates the friend request
         2. A RECEIVER whom receives the friend request
     """
-    #1 user can send out any number of friend requests
+    # 1 user can send out any number of friend requests
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
     is_active = models.BooleanField(blank=True, null=False, default=True)

@@ -1,12 +1,21 @@
 from .models import List, Friends, FriendRequest
 
 
-def available_lists(request):
+def user_lists(request):
     try:
-        objs = List.objects.filter(user=request.user)
-        return {'available_lists': objs}
+        user_lists = List.objects.filter(user=request.user)
+        return {'user_lists': user_lists}
+
     except TypeError:
-        return {'available_lists': ()}
+        return {'user_lists': ()}
+
+
+def shared_lists(request):
+    try:
+        shared_lists = List.objects.filter(shared_with=request.user)
+        return {'shared_lists': shared_lists}
+    except TypeError:
+        return {'shared_lists': ()}
 
 
 def current_friends(request):
@@ -17,8 +26,6 @@ def current_friends(request):
             return {'friends': {}}
         else:
             return {'friends': friends}
-    except TypeError:
-        return {'friends': ()}
     except:
         return {'friends': ()}
 
