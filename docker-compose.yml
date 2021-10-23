@@ -2,16 +2,17 @@
   services:
     db:
       image: postgres:13.4-alpine
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
       environment:
         - POSTGRES_HOST_AUTH_METHOD=trust
         - POSTGRES_USER=postgres
         - POSTGRES_DB=postgres
       restart: always
-      volumes:
-        - postgres_data:/var/lib/postgresql/data/
       container_name: db_container
 
     shopping_list:
+      image: shopping_list:shopping_list
       build: .
       ports:
         - "8000:8000"
@@ -19,18 +20,16 @@
         - .:/home/user/shopping_list
         - ./database:/db
       environment:
-        - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
         - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+        - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
         - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
         - DATABASE_ENGINE=${DATABASE_ENGINE}
         - DATABASE_USER=${DATABASE_USER}
         - DATABASE_NAME=${DATABASE_NAME}
         - DATABASE_HOST=${DATABASE_HOST}
         - DATABASE_PORT=${DATABASE_PORT}
-      image: shopping_list:shopping_list
       container_name: shopping_list_container
       depends_on:
         - db
-
   volumes:
     postgres_data:

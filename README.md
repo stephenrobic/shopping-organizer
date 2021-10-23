@@ -38,3 +38,35 @@ The intended future goal is to also receive recommendations of recipes that you 
 - [ ] Recipe list :thought_balloon:
 - [ ] Machine learning to suggest (and add to shopping list) kitchen inventory to be replenished :thought_balloon:
 - [ ] Machine learning to suggest recipes based off of either past food choices or desired cuisine type, considering factors such as available kitchen inventory, time available, and price of needed items :thought_balloon:
+
+## Installing and Running
+
+1. Install [Docker-compose](https://docs.docker.com/compose/install/).
+
+2. Clone the [shopping-organizer](https://github.com/stephenrobic/shopping-organizer) repository.
+    ```shell
+    git clone https://github.com/stephenrobic/shopping-organizer.git
+    ```
+
+3. Create an `.env` file in the parent directory (shopping-organizer), containing the following:
+    ```
+    DJANGO_SUPERUSER_USERNAME=user
+    DJANGO_SUPERUSER_PASSWORD=password
+    DJANGO_SUPERUSER_EMAIL=youremail@email.com
+    DATABASE_ENGINE=django.db.backends.postgresql
+    DATABASE_USER=postgres
+    DATABASE_NAME=postgres
+    DATABASE_HOST=db
+    DATABASE_PORT=5432
+    ```
+    **NOTE**: For `DJANGO_SUPERUSER_EMAIL`, change `youremail@email.com` to your preferred email address. The `DJANGO_SUPERUSER_USERNAME` and `DJANGO_SUPERUSER_PASSWORD` will be used to log in to the Django admin site ([http://0.0.0.0:8000/admin](http://0.0.0.0:8000/admin)).
+
+4. Within this same parent directory, use the following command to build the images and start the containers:
+    ```shell
+    docker-compose up -d --build
+    ```
+    This will create docker "containers", containing the shopping-list and postgres database images.
+
+    **NOTE**: The `-d` option runs containers detached in the background; you may find it useful to exclude this, as you will be able to note information about the building. The `--build` option builds the images (postgres alpine server and shopping list app), before starting the containers.
+
+6. In your browser, go to [http://0.0.0.0:8000](http://0.0.0.0:8000) to launch the application. Voilà!
