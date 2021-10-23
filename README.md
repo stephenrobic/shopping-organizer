@@ -35,6 +35,6 @@ The intended future goal is to also receive recommendations of recipes that you 
 
 ### Hopeful Future Implementations:
 - [ ] Kitchen/pantry inventory system :thought_balloon:
-- [ ] Recipe list :thought_balloon:
+- [ ] Recipes (webscraped for convenience and user created) :thought_balloon:
 - [ ] Machine learning to suggest (and add to shopping list) kitchen inventory to be replenished :thought_balloon:
 - [ ] Machine learning to suggest recipes based off of either past food choices or desired cuisine type, considering factors such as available kitchen inventory, time available, and price of needed items :thought_balloon:
