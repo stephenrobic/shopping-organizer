@@ -5,6 +5,15 @@ This is a web application designed to make the shopping and grocery planning exp
 
 The intended future goal is to also receive recommendations of recipes that you already have ingredients for in your own personal pantry, or that require purchasing the fewest additional ingredients. Also intended, is for the app to alert ingredients are low or need to be purchased in your personal pantry.
 
+
+## Software Used:
+- Python 3.9
+- Django 3.2
+- PostgreSQL (using psycopg2 2.9.1)
+- Docker/ Docker-compose
+- Bootstrap 5.1
+
+
 ## Features:
 
 ### Currently Implemented
