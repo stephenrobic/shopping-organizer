@@ -1,6 +1,7 @@
 .fill-height{
     position: relative;
-    background: #cbefc4;
+    background-color: red;
+    background-image: linear-gradient(50deg, #33ed64, blue);
     min-height: 100%;
     height:100vh;
 }
@@ -15,4 +16,14 @@
 
 .field_set{
   border: 6px ridge #dc3545;
+}
+.login-wrapper{
+    display: flex;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form{
+    width: 600px;
 }
