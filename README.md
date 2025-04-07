@@ -1,4 +1,4 @@
-# Shopping Organizer
+# NiftyList
 
 ## Application Description:
 This is a web application designed to make the shopping and grocery planning experience a breeze. This web app can be used to manage and store recipes, lists (shopping, to-do, etc.), and in the future, your kitchen/ pantry inventory.
